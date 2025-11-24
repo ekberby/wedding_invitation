@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Əkbər &amp; Pərvin – Wedding Invitation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --card: #ffffff;
+      --accent: #b89a67;
+      --accent-soft: #e0d2b4;
+      --text-main: #2c2c2c;
+      --text-muted: #7a7a7a;
+      --border: #e6dfd1;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.08);
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #fdfaf5 0, #f2ece2 40%, #ebe3d6 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .shell {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 32px;
+      padding: 18px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
+      max-width: 960px;
+      width: 100%;
+      backdrop-filter: blur(16px);
+    }
+
+    .invite {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 24px 12px;
+      }
+      .shell {
+        padding: 12px;
+        border-radius: 24px;
+      }
+      .invite {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left column: main content */
+    .left {
+      padding: 32px 32px 28px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(184, 154, 103, 0.15), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(184, 154, 103, 0.12), transparent 55%);
+      pointer-events: none;
+    }
+
+    .header-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--accent-soft);
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .names {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 32px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #1f1b16;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      padding: 3px;
+      background: rgba(255, 255, 255, 0.9);
+      margin: 10px 0 20px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .and-line {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .date-city {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .divider {
+      width: 56px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      margin-bottom: 18px;
+    }
+
+    .body-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .body-text p + p {
+      margin-top: 10px;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 18px;
+      margin: 18px 0 20px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .detail-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 2px;
+      color: #a18b63;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: var(--radius-pill);
+      padding: 8px 18px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent);
+      border-style: dashed;
+    }
+
+    .btn-primary span.icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .footer-sign {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .footer-sign span {
+      color: var(--accent);
+    }
+
+    .lang-block {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lang-block.hidden {
+      display: none;
+    }
+
+    /* Right column: side panel */
+    .right {
+      background: radial-gradient(circle at top, #d9c8aa 0, #c2a884 30%, #8d7250 100%);
+      color: #fff;
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .right::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      top: -120px;
+      right: -60px;
+    }
+
+    .right::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      bottom: -110px;
+      left: -40px;
+    }
+
+    .side-lang-block {
+      position: relative;
+      z-index: 1;
+    }
+
+    .side-lang-block.hidden {
+      display: none;
+    }
+
+    .monogram {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Georgia", serif;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .side-heading {
+      font-family: "Georgia", serif;
+      font-size: 20px;
+      margin-bottom: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .side-sub {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .side-line {
+      width: 36px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.7);
+      margin-bottom: 18px;
+    }
+
+    .info-block {
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.96;
+      margin-bottom: 16px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 13px;
+    }
+
+    .side-bottom {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1;
+    }
+
+    .side-bottom span {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
+      text-transform: none;
+    }
+
+    @media (max-width: 768px) {
+      .left {
+        padding: 24px 20px 22px 20px;
+      }
+      .right {
+        padding: 22px 20px;
+      }
+      .names {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="invite">
+      <div class="left">
+        <div class="header-chip">
+          <div class="dot"></div>
+          <span>Wedding Invitation · Toy dəvətnaməsi</span>
+        </div>
+
+        <div class="names">ƏKBƏR &amp; PƏRVİN</div>
+
+        <div class="lang-toggle" id="langToggle">
+          <button class="lang-btn active" data-lang="en">English</button>
+          <button class="lang-btn" data-lang="az">Azərbaycanca</button>
+          <button class="lang-btn" data-lang="tr">Türkçe</button>
+        </div>
+
+        <!-- English block -->
+        <div class="lang-block" data-lang="en">
+          <div class="and-line">TOGETHER WITH THEIR FAMILIES</div>
+          <div class="date-city">17 JANUARY · BAKU</div>
+          <div class="divider"></div>
+
+          <div class="body-text">
+            <p>Dear Guest,</p>
+            <p>
+              Together with our families, we are delighted to invite you to our wedding celebration at Grand Opera Palace in Baku.
+            </p>
+            <p>
+              Your presence will make our special day even more meaningful and memorable.
+            </p>
+          </div>
+
+          <div class="details">
+            <div>
+              <div class="detail-label">Date</div>
+              <div class="detail-value">17 January</div>
+            </div>
+            <div>
+              <div class="detail-label">City</div>
+              <div class="detail-value">Baku</div>
+            </div>
+            <div>
+              <div class="detail-label">Venue</div>
+              <div class="detail-value">Grand Opera Palace</div>
+            </div>
+            <div>
+              <div class="detail-label">Occasion</div>
+              <div class="detail-value">Wedding celebration</div>
+            </div>
+          </div>
+
+          <div class="note">
+            Dress code: we kindly invite you to choose elegant and classic outfits.
+          </div>
+
+          <div class="cta-row">
+            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+              <span class="icon">➜</span>
+              <span>Open in Maps</span>
+            </a>
+            <button class="btn-ghost" type="button" id="copyBtn-en">
+              Copy link
+            </button>
+          </div>
+
+          <div class="footer-sign">
+            With love, <span>Əkbər &amp; Pərvin</span>
+          </div>
+        </div>
+
+        <!-- Azerbaijani block -->
+        <div class="lang-block hidden" data-lang="az">
+          <div class="and-line">AİLƏLƏRİ İLƏ BİRLİKDƏ</div>
+          <div class="date-city">17 YANVAR · BAKI</div>
+          <div class="divider"></div>
+
+          <div class="body-text">
+            <p>Hörmətli qonağımız,</p>
+            <p>
+              Sizi, ailələrimizlə birlikdə, həyatlarımızı birləşdirdiyimiz bu xüsusi günə – Bakıda yerləşən Grand Opera Palace-də keçiriləcək toy mərasimimizə – dəvət etməkdən böyük məmnunluq duyuruq.
+            </p>
+            <p>
+              Sizin iştirakınız bu günü bizim üçün daha da mənalı və unudulmaz edəcək.
+            </p>
+          </div>
+
+          <div class="details">
+            <div>
+              <div class="detail-label">Tarix</div>
+              <div class="detail-value">17 yanvar</div>
+            </div>
+            <div>
+              <div class="detail-label">Şəhər</div>
+              <div class="detail-value">Bakı</div>
+            </div>
+            <div>
+              <div class="detail-label">Məkan</div>
+              <div class="detail-value">Grand Opera Palace</div>
+            </div>
+            <div>
+              <div class="detail-label">Mərasim</div>
+              <div class="detail-value">Toy mərasimi</div>
+            </div>
+          </div>
+
+          <div class="note">
+            Dress code: mərasimə zərif və klassik üslubda geyimlə qatılmağınızı rica edirik.
+          </div>
+
+          <div class="cta-row">
+            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+              <span class="icon">➜</span>
+              <span>Xəritədə aç</span>
+            </a>
+            <button class="btn-ghost" type="button" id="copyBtn-az">
+              Keçidi kopyala
+            </button>
+          </div>
+
+          <div class="footer-sign">
+            Hörmətlə, <span>Əkbər &amp; Pərvin</span>
+          </div>
+        </div>
+
+        <!-- Turkish block -->
+        <div class="lang-block hidden" data-lang="tr">
+          <div class="and-line">AİLELERİYLE BİRLİKTE</div>
+          <div class="date-city">17 OCAK · BAKÜ</div>
+          <div class="divider"></div>
+
+          <div class="body-text">
+            <p>Değerli Misafirimiz,</p>
+            <p>
+              Ailelerimizle birlikte, hayatlarımızı birleştireceğimiz bu özel günde – Bakü’de yer alan Grand Opera Palace'daki düğün törenimize – sizi davet etmekten büyük mutluluk duyuyoruz.
+            </p>
+            <p>
+              Varlığınız bu günü bizim için daha anlamlı ve unutulmaz kılacaktır.
+            </p>
+          </div>
+
+          <div class="details">
+            <div>
+              <div class="detail-label">Tarih</div>
+              <div class="detail-value">17 Ocak</div>
+            </div>
+            <div>
+              <div class="detail-label">Şehir</div>
+              <div class="detail-value">Bakü</div>
+            </div>
+            <div>
+              <div class="detail-label">Mekan</div>
+              <div class="detail-value">Grand Opera Palace</div>
+            </div>
+            <div>
+              <div class="detail-label">Tören</div>
+              <div class="detail-value">Düğün töreni</div>
+            </div>
+          </div>
+
+          <div class="note">
+            Konsept: zarif ve klasik giyimi tercih etmenizi rica ederiz.
+          </div>
+
+          <div class="cta-row">
+            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+              <span class="icon">➜</span>
+              <span>Haritada aç</span>
+            </a>
+            <button class="btn-ghost" type="button" id="copyBtn-tr">
+              Bağlantıyı kopyala
+            </button>
+          </div>
+
+          <div class="footer-sign">
+            Sevgiyle, <span>Əkbər &amp; Pərvin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <!-- English side -->
+        <div class="side-lang-block" data-lang="en">
+          <div>
+            <div class="monogram">Ə&amp;P</div>
+            <div class="side-heading">Grand Opera Palace</div>
+            <div class="side-sub">BAKU</div>
+            <div class="side-line"></div>
+
+            <div class="info-block">
+              <div class="info-label">A special day</div>
+              <div class="info-value">
+                A celebration of love, family and a new beginning.
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-label">Please join us</div>
+              <div class="info-value">
+                Your presence is the greatest gift.
+              </div>
+            </div>
+          </div>
+
+          <div class="side-bottom">
+            SAVE THE DATE
+            <span>17 January · Baku</span>
+          </div>
+        </div>
+
+        <!-- Azerbaijani side -->
+        <div class="side-lang-block hidden" data-lang="az">
+          <div>
+            <div class="monogram">Ə&amp;P</div>
+            <div class="side-heading">Grand Opera Palace</div>
+            <div class="side-sub">BAKI</div>
+            <div class="side-line"></div>
+
+            <div class="info-block">
+              <div class="info-label">Xüsusi bir gün</div>
+              <div class="info-value">
+                Sevgi, ailə və yeni başlanğıcın bayramı.
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-label">Sizi aramızda görmək istəyirik</div>
+              <div class="info-value">
+                Sizin iştirakınız bizim üçün ən böyük hədiyyədir.
+              </div>
+            </div>
+          </div>
+
+          <div class="side-bottom">
+            TARİXİ QEYD EDİN
+            <span>17 yanvar · Bakı</span>
+          </div>
+        </div>
+
+        <!-- Turkish side -->
+        <div class="side-lang-block hidden" data-lang="tr">
+          <div>
+            <div class="monogram">Ə&amp;P</div>
+            <div class="side-heading">Grand Opera Palace</div>
+            <div class="side-sub">BAKÜ</div>
+            <div class="side-line"></div>
+
+            <div class="info-block">
+              <div class="info-label">Özel bir gün</div>
+              <div class="info-value">
+                Sevgi, aile ve yeni bir başlangıcın kutlaması.
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-label">Lütfen aramızda olun</div>
+              <div class="info-value">
+                Varlığınız bizim için en büyük hediyedir.
+              </div>
+            </div>
+          </div>
+
+          <div class="side-bottom">
+            TARİHİ NOT EDİN
+            <span>17 Ocak · Bakü</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById("langToggle");
+      var mainBlocks = document.querySelectorAll(".lang-block");
+      var sideBlocks = document.querySelectorAll(".side-lang-block");
+      var buttons = toggle.querySelectorAll(".lang-btn");
+
+      function setLanguage(lang) {
+        buttons.forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-lang") === lang);
+        });
+
+        mainBlocks.forEach(function (block) {
+          block.classList.toggle("hidden", block.getAttribute("data-lang") !== lang);
+        });
+
+        sideBlocks.forEach(function (block) {
+          block.classList.toggle("hidden", block.getAttribute("data-lang") !== lang);
+        });
+      }
+
+      toggle.addEventListener("click", function (e) {
+        var btn = e.target.closest(".lang-btn");
+        if (!btn) return;
+        var lang = btn.getAttribute("data-lang");
+        setLanguage(lang);
+      });
+
+      // Copy link buttons
+      function attachCopy(id) {
+        var btn = document.getElementById(id);
+        if (!btn || !navigator.clipboard) return;
+        btn.addEventListener("click", function () {
+          navigator.clipboard.writeText(window.location.href).catch(function () {});
+          btn.textContent = "Copied!";
+          setTimeout(function () {
+            if (id === "copyBtn-en") btn.textContent = "Copy link";
+            if (id === "copyBtn-az") btn.textContent = "Keçidi kopyala";
+            if (id === "copyBtn-tr") btn.textContent = "Bağlantıyı kopyala";
+          }, 1400);
+        });
+      }
+
+      attachCopy("copyBtn-en");
+      attachCopy("copyBtn-az");
+      attachCopy("copyBtn-tr");
+    })();
+  </script>
+</body>
+</html>
