@@ -52,6 +52,7 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      max-height: calc(100vh - 80px);
     }
 
     @media (max-width: 768px) {
@@ -64,23 +65,37 @@
       }
       .invite {
         grid-template-columns: 1fr;
+        max-height: none;
       }
     }
 
-    /* Left column: main content */
+    /* Left column: scrollable content */
     .left {
       padding: 32px 32px 28px 32px;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .left::-webkit-scrollbar {
+      width: 6px;
+    }
+    .left::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .left::-webkit-scrollbar-thumb {
+      background: #e0d6c5;
+      border-radius: 999px;
     }
 
     .left::before {
       content: "";
-      position: absolute;
+      position: fixed;
       inset: 0;
       background: radial-gradient(circle at top left, rgba(184, 154, 103, 0.15), transparent 55%),
                   radial-gradient(circle at bottom right, rgba(184, 154, 103, 0.12), transparent 55%);
       pointer-events: none;
+      z-index: 0;
     }
 
     .header-chip {
@@ -90,14 +105,14 @@
       padding: 4px 14px;
       border-radius: var(--radius-pill);
       border: 1px solid var(--accent-soft);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       font-size: 11px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 18px;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .dot {
@@ -115,7 +130,7 @@
       margin-bottom: 8px;
       color: #1f1b16;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .lang-toggle {
@@ -126,7 +141,7 @@
       background: rgba(255, 255, 255, 0.9);
       margin: 10px 0 20px 0;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .lang-btn {
@@ -147,20 +162,40 @@
       color: #fff;
     }
 
+    .sections {
+      position: relative;
+      z-index: 2;
+      padding-bottom: 16px;
+    }
+
+    .section-block {
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .section-block:nth-child(1) { animation-delay: 0.05s; }
+    .section-block:nth-child(2) { animation-delay: 0.18s; }
+    .section-block:nth-child(3) { animation-delay: 0.32s; }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .and-line {
       font-size: 11px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 10px;
-    }
-
-    .date-city {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-      margin-bottom: 18px;
     }
 
     .divider {
@@ -179,28 +214,6 @@
 
     .body-text p + p {
       margin-top: 10px;
-    }
-
-    .details {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px 18px;
-      margin: 18px 0 20px 0;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .detail-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 2px;
-      color: #a18b63;
-    }
-
-    .detail-value {
-      font-size: 13px;
-      color: var(--text-main);
     }
 
     .note {
@@ -262,6 +275,157 @@
 
     .lang-block.hidden {
       display: none;
+    }
+
+    /* Calendar styles */
+    .calendar-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 16px 16px 14px 16px;
+      max-width: 320px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .cal-month {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .cal-year {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .cal-day-name {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .cal-date {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cal-date.highlight {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 10px 18px rgba(184, 154, 103, 0.35);
+    }
+
+    .calendar-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .calendar-actions {
+      margin-top: 10px;
+    }
+
+    /* Location card */
+    .location-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .location-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .loc-text-heading {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .loc-title {
+      font-family: "Georgia", serif;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .loc-body {
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .loc-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .baku-photo {
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 170px;
+      background-image: url('Baku-ChrisSchalkx-4.webp');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+    }
+
+    .baku-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(0, 0, 0, 0.25), transparent 60%);
+    }
+
+    .baku-label {
+      position: relative;
+      z-index: 1;
+      padding: 14px 16px;
+      color: #fff;
+    }
+
+    .baku-label-main {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .baku-label-sub {
+      font-size: 11px;
+      opacity: 0.9;
     }
 
     /* Right column: side panel */
@@ -372,17 +536,16 @@
     }
 
     .side-bottom span {
-      display: block;
-      margin-top: 6px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      opacity: 0.9;
-      text-transform: none;
+      display: none;
     }
 
     @media (max-width: 768px) {
       .left {
         padding: 24px 20px 22px 20px;
+        max-height: none;
+      }
+      .invite {
+        max-height: none;
       }
       .right {
         padding: 22px 20px;
@@ -410,166 +573,395 @@
           <button class="lang-btn" data-lang="tr">Türkçe</button>
         </div>
 
-        <!-- English block -->
-        <div class="lang-block" data-lang="en">
-          <div class="and-line">TOGETHER WITH THEIR FAMILIES</div>
-          <div class="date-city">17 JANUARY · BAKU</div>
-          <div class="divider"></div>
+        <div class="sections">
 
-          <div class="body-text">
-            <p>Dear Guest,</p>
-            <p>
-              Together with our families, we are delighted to invite you to our wedding celebration at Grand Opera Palace in Baku.
-            </p>
-            <p>
-              Your presence will make our special day even more meaningful and memorable.
-            </p>
+          <!-- English -->
+          <div class="lang-block" data-lang="en">
+            <!-- Section 1: main invitation -->
+            <section class="section-block">
+              <div class="and-line">TOGETHER WITH THEIR FAMILIES</div>
+              <div class="divider"></div>
+
+              <div class="body-text">
+                <p>Dear Guest,</p>
+                <p>
+                  Together with our families, we are delighted to invite you to our wedding celebration.
+                </p>
+                <p>
+                  Your presence will make our special day even more meaningful and memorable.
+                </p>
+              </div>
+
+              <div class="note">
+                Dress code: we kindly invite you to choose elegant and classic outfits.
+              </div>
+
+              <div class="cta-row">
+                <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                  <span class="icon">➜</span>
+                  <span>Open in Maps</span>
+                </a>
+                <button class="btn-ghost" type="button" id="copyBtn-en">
+                  Copy link
+                </button>
+              </div>
+
+              <div class="footer-sign">
+                With love, <span>Əkbər &amp; Pərvin</span>
+              </div>
+            </section>
+
+            <!-- Section 2: calendar -->
+            <section class="section-block">
+              <div class="and-line">SAVE THE DATE</div>
+              <div class="divider"></div>
+
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <div class="cal-month">January</div>
+                  <div class="cal-year">17</div>
+                </div>
+                <div class="calendar-grid">
+                  <div class="cal-day-name">Mo</div>
+                  <div class="cal-day-name">Tu</div>
+                  <div class="cal-day-name">We</div>
+                  <div class="cal-day-name">Th</div>
+                  <div class="cal-day-name">Fr</div>
+                  <div class="cal-day-name">Sa</div>
+                  <div class="cal-day-name">Su</div>
+
+                  <div class="cal-date"></div>
+                  <div class="cal-date"></div>
+                  <div class="cal-date">1</div>
+                  <div class="cal-date">2</div>
+                  <div class="cal-date">3</div>
+                  <div class="cal-date">4</div>
+                  <div class="cal-date">5</div>
+                  <div class="cal-date">6</div>
+                  <div class="cal-date">7</div>
+                  <div class="cal-date">8</div>
+                  <div class="cal-date">9</div>
+                  <div class="cal-date">10</div>
+                  <div class="cal-date">11</div>
+                  <div class="cal-date">12</div>
+                  <div class="cal-date">13</div>
+                  <div class="cal-date">14</div>
+                  <div class="cal-date">15</div>
+                  <div class="cal-date">16</div>
+                  <button class="cal-date highlight">17</button>
+                  <div class="cal-date">18</div>
+                  <div class="cal-date">19</div>
+                  <div class="cal-date">20</div>
+                  <div class="cal-date">21</div>
+                  <div class="cal-date">22</div>
+                  <div class="cal-date">23</div>
+                  <div class="cal-date">24</div>
+                  <div class="cal-date">25</div>
+                  <div class="cal-date">26</div>
+                  <div class="cal-date">27</div>
+                  <div class="cal-date">28</div>
+                  <div class="cal-date">29</div>
+                  <div class="cal-date">30</div>
+                  <div class="cal-date">31</div>
+                </div>
+                <div class="calendar-note">
+                  Please mark this day in your calendar and celebrate with us.
+                </div>
+                <div class="calendar-actions">
+                  <button class="btn-ghost" type="button" data-cal-btn="en">Add to calendar</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 3: location -->
+            <section class="section-block">
+              <div class="and-line">LOCATION</div>
+              <div class="divider"></div>
+
+              <div class="location-card">
+                <div>
+                  <div class="loc-text-heading">Venue</div>
+                  <div class="loc-title">Grand Opera Palace</div>
+                  <div class="loc-body">
+                    Our wedding celebration will take place at Grand Opera Palace in the heart of Baku, surrounded by the city’s lights and history.
+                  </div>
+                  <div class="loc-meta">
+                    Baku, Azerbaijan
+                  </div>
+                  <div class="cta-row" style="margin-top:12px;">
+                    <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                      <span class="icon">➜</span>
+                      <span>Open in Maps</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="baku-photo">
+                  <div class="baku-overlay"></div>
+                  <div class="baku-label">
+                    <div class="baku-label-main">Baku</div>
+                    <div class="baku-label-sub">City of lights on the Caspian Sea.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          <div class="details">
-            <div>
-              <div class="detail-label">Date</div>
-              <div class="detail-value">17 January</div>
-            </div>
-            <div>
-              <div class="detail-label">City</div>
-              <div class="detail-value">Baku</div>
-            </div>
-            <div>
-              <div class="detail-label">Venue</div>
-              <div class="detail-value">Grand Opera Palace</div>
-            </div>
-            <div>
-              <div class="detail-label">Occasion</div>
-              <div class="detail-value">Wedding celebration</div>
-            </div>
+          <!-- Azerbaijani -->
+          <div class="lang-block hidden" data-lang="az">
+            <section class="section-block">
+              <div class="and-line">AİLƏLƏRİ İLƏ BİRLİKDƏ</div>
+              <div class="divider"></div>
+
+              <div class="body-text">
+                <p>Hörmətli qonağımız,</p>
+                <p>
+                  Sizi, ailələrimizlə birlikdə, həyatlarımızı birləşdirdiyimiz bu xüsusi günə – toy mərasimimizə – dəvət etməkdən böyük məmnunluq duyuruq.
+                </p>
+                <p>
+                  Sizin iştirakınız bu günü bizim üçün daha da mənalı və unudulmaz edəcək.
+                </p>
+              </div>
+
+              <div class="note">
+                Dress code: mərasimə zərif və klassik üslubda geyimlə qatılmağınızı rica edirik.
+              </div>
+
+              <div class="cta-row">
+                <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                  <span class="icon">➜</span>
+                  <span>Xəritədə aç</span>
+                </a>
+                <button class="btn-ghost" type="button" id="copyBtn-az">
+                  Keçidi kopyala
+                </button>
+              </div>
+
+              <div class="footer-sign">
+                Hörmətlə, <span>Əkbər &amp; Pərvin</span>
+              </div>
+            </section>
+
+            <section class="section-block">
+              <div class="and-line">TARİXİ QEYD EDİN</div>
+              <div class="divider"></div>
+
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <div class="cal-month">Yanvar</div>
+                  <div class="cal-year">17</div>
+                </div>
+                <div class="calendar-grid">
+                  <div class="cal-day-name">Be</div>
+                  <div class="cal-day-name">Ça</div>
+                  <div class="cal-day-name">Ç</div>
+                  <div class="cal-day-name">Ca</div>
+                  <div class="cal-day-name">C</div>
+                  <div class="cal-day-name">Ş</div>
+                  <div class="cal-day-name">B</div>
+
+                  <div class="cal-date"></div>
+                  <div class="cal-date"></div>
+                  <div class="cal-date">1</div>
+                  <div class="cal-date">2</div>
+                  <div class="cal-date">3</div>
+                  <div class="cal-date">4</div>
+                  <div class="cal-date">5</div>
+                  <div class="cal-date">6</div>
+                  <div class="cal-date">7</div>
+                  <div class="cal-date">8</div>
+                  <div class="cal-date">9</div>
+                  <div class="cal-date">10</div>
+                  <div class="cal-date">11</div>
+                  <div class="cal-date">12</div>
+                  <div class="cal-date">13</div>
+                  <div class="cal-date">14</div>
+                  <div class="cal-date">15</div>
+                  <div class="cal-date">16</div>
+                  <button class="cal-date highlight">17</button>
+                  <div class="cal-date">18</div>
+                  <div class="cal-date">19</div>
+                  <div class="cal-date">20</div>
+                  <div class="cal-date">21</div>
+                  <div class="cal-date">22</div>
+                  <div class="cal-date">23</div>
+                  <div class="cal-date">24</div>
+                  <div class="cal-date">25</div>
+                  <div class="cal-date">26</div>
+                  <div class="cal-date">27</div>
+                  <div class="cal-date">28</div>
+                  <div class="cal-date">29</div>
+                  <div class="cal-date">30</div>
+                  <div class="cal-date">31</div>
+                </div>
+                <div class="calendar-note">
+                  Xahiş edirik bu tarixi təqviminizdə qeyd edin və bu günü bizimlə birlikdə qeyd edin.
+                </div>
+                <div class="calendar-actions">
+                  <button class="btn-ghost" type="button" data-cal-btn="az">Təqvimə əlavə et</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block">
+              <div class="and-line">MƏKAN</div>
+              <div class="divider"></div>
+
+              <div class="location-card">
+                <div>
+                  <div class="loc-text-heading">Məkan</div>
+                  <div class="loc-title">Grand Opera Palace</div>
+                  <div class="loc-body">
+                    Toy mərasimimiz Bakının mərkəzində yerləşən Grand Opera Palace-də, şəhərin işıqları və tarixi ab-havası fonunda keçiriləcək.
+                  </div>
+                  <div class="loc-meta">
+                    Bakı, Azərbaycan
+                  </div>
+                  <div class="cta-row" style="margin-top:12px;">
+                    <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                      <span class="icon">➜</span>
+                      <span>Xəritədə aç</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="baku-photo">
+                  <div class="baku-overlay"></div>
+                  <div class="baku-label">
+                    <div class="baku-label-main">Bakı</div>
+                    <div class="baku-label-sub">Xəzər sahilində işıqlar şəhəri.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          <div class="note">
-            Dress code: we kindly invite you to choose elegant and classic outfits.
+          <!-- Turkish -->
+          <div class="lang-block hidden" data-lang="tr">
+            <section class="section-block">
+              <div class="and-line">AİLELERİYLE BİRLİKTE</div>
+              <div class="divider"></div>
+
+              <div class="body-text">
+                <p>Değerli Misafirimiz,</p>
+                <p>
+                  Ailelerimizle birlikte, hayatlarımızı birleştireceğimiz bu özel günde düzenleyeceğimiz düğün törenimize sizi davet etmekten büyük mutluluk duyuyoruz.
+                </p>
+                <p>
+                  Varlığınız bu günü bizim için daha anlamlı ve unutulmaz kılacaktır.
+                </p>
+              </div>
+
+              <div class="note">
+                Konsept: zarif ve klasik giyimi tercih etmenizi rica ederiz.
+              </div>
+
+              <div class="cta-row">
+                <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                  <span class="icon">➜</span>
+                  <span>Haritada aç</span>
+                </a>
+                <button class="btn-ghost" type="button" id="copyBtn-tr">
+                  Bağlantıyı kopyala
+                </button>
+              </div>
+
+              <div class="footer-sign">
+                Sevgiyle, <span>Əkbər &amp; Pərvin</span>
+              </div>
+            </section>
+
+            <section class="section-block">
+              <div class="and-line">TARİHİ NOT EDİN</div>
+              <div class="divider"></div>
+
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <div class="cal-month">Ocak</div>
+                  <div class="cal-year">17</div>
+                </div>
+                <div class="calendar-grid">
+                  <div class="cal-day-name">Pt</div>
+                  <div class="cal-day-name">Sa</div>
+                  <div class="cal-day-name">Çr</div>
+                  <div class="cal-day-name">Pe</div>
+                  <div class="cal-day-name">Cu</div>
+                  <div class="cal-day-name">Ct</div>
+                  <div class="cal-day-name">Pz</div>
+
+                  <div class="cal-date"></div>
+                  <div class="cal-date"></div>
+                  <div class="cal-date">1</div>
+                  <div class="cal-date">2</div>
+                  <div class="cal-date">3</div>
+                  <div class="cal-date">4</div>
+                  <div class="cal-date">5</div>
+                  <div class="cal-date">6</div>
+                  <div class="cal-date">7</div>
+                  <div class="cal-date">8</div>
+                  <div class="cal-date">9</div>
+                  <div class="cal-date">10</div>
+                  <div class="cal-date">11</div>
+                  <div class="cal-date">12</div>
+                  <div class="cal-date">13</div>
+                  <div class="cal-date">14</div>
+                  <div class="cal-date">15</div>
+                  <div class="cal-date">16</div>
+                  <button class="cal-date highlight">17</button>
+                  <div class="cal-date">18</div>
+                  <div class="cal-date">19</div>
+                  <div class="cal-date">20</div>
+                  <div class="cal-date">21</div>
+                  <div class="cal-date">22</div>
+                  <div class="cal-date">23</div>
+                  <div class="cal-date">24</div>
+                  <div class="cal-date">25</div>
+                  <div class="cal-date">26</div>
+                  <div class="cal-date">27</div>
+                  <div class="cal-date">28</div>
+                  <div class="cal-date">29</div>
+                  <div class="cal-date">30</div>
+                  <div class="cal-date">31</div>
+                </div>
+                <div class="calendar-note">
+                  Lütfen bu tarihi takviminize not edin ve bu günü bizimle birlikte kutlayın.
+                </div>
+                <div class="calendar-actions">
+                  <button class="btn-ghost" type="button" data-cal-btn="tr">Takvime ekle</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block">
+              <div class="and-line">MEKAN</div>
+              <div class="divider"></div>
+
+              <div class="location-card">
+                <div>
+                  <div class="loc-text-heading">Mekan</div>
+                  <div class="loc-title">Grand Opera Palace</div>
+                  <div class="loc-body">
+                    Düğün törenimiz, Bakü’nün kalbinde yer alan Grand Opera Palace’ta, şehrin ışıkları ve tarihi atmosferi eşliğinde gerçekleşecektir.
+                  </div>
+                  <div class="loc-meta">
+                    Bakü, Azerbaycan
+                  </div>
+                  <div class="cta-row" style="margin-top:12px;">
+                    <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
+                      <span class="icon">➜</span>
+                      <span>Haritada aç</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="baku-photo">
+                  <div class="baku-overlay"></div>
+                  <div class="baku-label">
+                    <div class="baku-label-main">Bakü</div>
+                    <div class="baku-label-sub">Hazar kıyısında ışıklar şehri.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          <div class="cta-row">
-            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
-              <span class="icon">➜</span>
-              <span>Open in Maps</span>
-            </a>
-            <button class="btn-ghost" type="button" id="copyBtn-en">
-              Copy link
-            </button>
-          </div>
-
-          <div class="footer-sign">
-            With love, <span>Əkbər &amp; Pərvin</span>
-          </div>
-        </div>
-
-        <!-- Azerbaijani block -->
-        <div class="lang-block hidden" data-lang="az">
-          <div class="and-line">AİLƏLƏRİ İLƏ BİRLİKDƏ</div>
-          <div class="date-city">17 YANVAR · BAKI</div>
-          <div class="divider"></div>
-
-          <div class="body-text">
-            <p>Hörmətli qonağımız,</p>
-            <p>
-              Sizi, ailələrimizlə birlikdə, həyatlarımızı birləşdirdiyimiz bu xüsusi günə – Bakıda yerləşən Grand Opera Palace-də keçiriləcək toy mərasimimizə – dəvət etməkdən böyük məmnunluq duyuruq.
-            </p>
-            <p>
-              Sizin iştirakınız bu günü bizim üçün daha da mənalı və unudulmaz edəcək.
-            </p>
-          </div>
-
-          <div class="details">
-            <div>
-              <div class="detail-label">Tarix</div>
-              <div class="detail-value">17 yanvar</div>
-            </div>
-            <div>
-              <div class="detail-label">Şəhər</div>
-              <div class="detail-value">Bakı</div>
-            </div>
-            <div>
-              <div class="detail-label">Məkan</div>
-              <div class="detail-value">Grand Opera Palace</div>
-            </div>
-            <div>
-              <div class="detail-label">Mərasim</div>
-              <div class="detail-value">Toy mərasimi</div>
-            </div>
-          </div>
-
-          <div class="note">
-            Dress code: mərasimə zərif və klassik üslubda geyimlə qatılmağınızı rica edirik.
-          </div>
-
-          <div class="cta-row">
-            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
-              <span class="icon">➜</span>
-              <span>Xəritədə aç</span>
-            </a>
-            <button class="btn-ghost" type="button" id="copyBtn-az">
-              Keçidi kopyala
-            </button>
-          </div>
-
-          <div class="footer-sign">
-            Hörmətlə, <span>Əkbər &amp; Pərvin</span>
-          </div>
-        </div>
-
-        <!-- Turkish block -->
-        <div class="lang-block hidden" data-lang="tr">
-          <div class="and-line">AİLELERİYLE BİRLİKTE</div>
-          <div class="date-city">17 OCAK · BAKÜ</div>
-          <div class="divider"></div>
-
-          <div class="body-text">
-            <p>Değerli Misafirimiz,</p>
-            <p>
-              Ailelerimizle birlikte, hayatlarımızı birleştireceğimiz bu özel günde – Bakü’de yer alan Grand Opera Palace'daki düğün törenimize – sizi davet etmekten büyük mutluluk duyuyoruz.
-            </p>
-            <p>
-              Varlığınız bu günü bizim için daha anlamlı ve unutulmaz kılacaktır.
-            </p>
-          </div>
-
-          <div class="details">
-            <div>
-              <div class="detail-label">Tarih</div>
-              <div class="detail-value">17 Ocak</div>
-            </div>
-            <div>
-              <div class="detail-label">Şehir</div>
-              <div class="detail-value">Bakü</div>
-            </div>
-            <div>
-              <div class="detail-label">Mekan</div>
-              <div class="detail-value">Grand Opera Palace</div>
-            </div>
-            <div>
-              <div class="detail-label">Tören</div>
-              <div class="detail-value">Düğün töreni</div>
-            </div>
-          </div>
-
-          <div class="note">
-            Konsept: zarif ve klasik giyimi tercih etmenizi rica ederiz.
-          </div>
-
-          <div class="cta-row">
-            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Grand+Opera+Palace+Baku" target="_blank" rel="noreferrer">
-              <span class="icon">➜</span>
-              <span>Haritada aç</span>
-            </a>
-            <button class="btn-ghost" type="button" id="copyBtn-tr">
-              Bağlantıyı kopyala
-            </button>
-          </div>
-
-          <div class="footer-sign">
-            Sevgiyle, <span>Əkbər &amp; Pərvin</span>
-          </div>
         </div>
       </div>
 
@@ -599,7 +991,7 @@
 
           <div class="side-bottom">
             SAVE THE DATE
-            <span>17 January · Baku</span>
+            <span></span>
           </div>
         </div>
 
@@ -619,7 +1011,7 @@
             </div>
 
             <div class="info-block">
-              <div class="info-label">Sizi aramızda görmək istəyirik</div>
+              <div class="info-label">Sizi aramızda görmək istərik</div>
               <div class="info-value">
                 Sizin iştirakınız bizim üçün ən böyük hədiyyədir.
               </div>
@@ -628,7 +1020,7 @@
 
           <div class="side-bottom">
             TARİXİ QEYD EDİN
-            <span>17 yanvar · Bakı</span>
+            <span></span>
           </div>
         </div>
 
@@ -657,7 +1049,7 @@
 
           <div class="side-bottom">
             TARİHİ NOT EDİN
-            <span>17 Ocak · Bakü</span>
+            <span></span>
           </div>
         </div>
       </div>
@@ -667,49 +1059,105 @@
   <script>
     (function () {
       var toggle = document.getElementById("langToggle");
+      if (!toggle) return;
+
       var mainBlocks = document.querySelectorAll(".lang-block");
       var sideBlocks = document.querySelectorAll(".side-lang-block");
       var buttons = toggle.querySelectorAll(".lang-btn");
 
       function setLanguage(lang) {
-        buttons.forEach(function (b) {
+        for (var i = 0; i < buttons.length; i++) {
+          var b = buttons[i];
           b.classList.toggle("active", b.getAttribute("data-lang") === lang);
-        });
+        }
 
-        mainBlocks.forEach(function (block) {
-          block.classList.toggle("hidden", block.getAttribute("data-lang") !== lang);
-        });
+        for (var j = 0; j < mainBlocks.length; j++) {
+          var block = mainBlocks[j];
+          var isThis = block.getAttribute("data-lang") === lang;
+          block.classList.toggle("hidden", !isThis);
+        }
 
-        sideBlocks.forEach(function (block) {
-          block.classList.toggle("hidden", block.getAttribute("data-lang") !== lang);
-        });
+        for (var k = 0; k < sideBlocks.length; k++) {
+          var sblock = sideBlocks[k];
+          var isSide = sblock.getAttribute("data-lang") === lang;
+          sblock.classList.toggle("hidden", !isSide);
+        }
       }
 
       toggle.addEventListener("click", function (e) {
-        var btn = e.target.closest(".lang-btn");
-        if (!btn) return;
+        var btn = e.target;
+        if (!btn.classList.contains("lang-btn")) return;
         var lang = btn.getAttribute("data-lang");
+        if (!lang) return;
         setLanguage(lang);
       });
 
       // Copy link buttons
-      function attachCopy(id) {
+      function attachCopy(id, defaultText) {
         var btn = document.getElementById(id);
         if (!btn || !navigator.clipboard) return;
         btn.addEventListener("click", function () {
           navigator.clipboard.writeText(window.location.href).catch(function () {});
-          btn.textContent = "Copied!";
+          btn.textContent = "✓";
           setTimeout(function () {
-            if (id === "copyBtn-en") btn.textContent = "Copy link";
-            if (id === "copyBtn-az") btn.textContent = "Keçidi kopyala";
-            if (id === "copyBtn-tr") btn.textContent = "Bağlantıyı kopyala";
-          }, 1400);
+            btn.textContent = defaultText;
+          }, 1200);
         });
       }
 
-      attachCopy("copyBtn-en");
-      attachCopy("copyBtn-az");
-      attachCopy("copyBtn-tr");
+      attachCopy("copyBtn-en", "Copy link");
+      attachCopy("copyBtn-az", "Keçidi kopyala");
+      attachCopy("copyBtn-tr", "Bağlantıyı kopyala");
+
+      // Add-to-calendar buttons (.ics download)
+      var EVENT_YEAR = 2026; // <-- change this to your real wedding year
+
+      function handleAddToCalendar(lang) {
+        var title = "Əkbər & Pərvin Wedding";
+        var description;
+        if (lang === "az") {
+          description = "Əkbər və Pərvinin toy mərasimi";
+        } else if (lang === "tr") {
+          description = "Əkbər ve Pərvin’in düğün töreni";
+        } else {
+          description = "Wedding celebration of Əkbər & Pərvin";
+        }
+
+        var ics =
+          "BEGIN:VCALENDAR\r\n" +
+          "VERSION:2.0\r\n" +
+          "PRODID:-//AkbarParvinWedding//EN\r\n" +
+          "BEGIN:VEVENT\r\n" +
+          "SUMMARY:" + title + "\r\n" +
+          "DTSTART;VALUE=DATE:" + EVENT_YEAR + "0117\r\n" +
+          "DTEND;VALUE=DATE:" + EVENT_YEAR + "0118\r\n" +
+          "LOCATION:Grand Opera Palace, Baku\r\n" +
+          "DESCRIPTION:" + description + "\r\n" +
+          "END:VEVENT\r\n" +
+          "END:VCALENDAR";
+
+        var blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "akbar-parvin-wedding.ics";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
+
+      var calButtons = document.querySelectorAll("[data-cal-btn]");
+      for (var i = 0; i < calButtons.length; i++) {
+        (function (btn) {
+          btn.addEventListener("click", function () {
+            var lang = btn.getAttribute("data-cal-btn") || "en";
+            handleAddToCalendar(lang);
+          });
+        })(calButtons[i]);
+      }
     })();
   </script>
 </body>
