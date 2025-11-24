@@ -16,6 +16,9 @@
       --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.08);
       --radius-lg: 24px;
       --radius-pill: 999px;
+      --flower-pink: #e9b6c5;
+      --flower-gold: #d4b28c;
+      --flower-green: #9bb59a;
     }
 
     * {
@@ -43,6 +46,33 @@
       max-width: 960px;
       width: 100%;
       backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* soft floral corners on outer shell */
+    .shell::before,
+    .shell::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, var(--flower-pink) 0, transparent 55%),
+        radial-gradient(circle at 70% 70%, var(--flower-gold) 0, transparent 60%),
+        radial-gradient(circle at 10% 80%, var(--flower-green) 0, transparent 65%);
+      opacity: 0.16;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .shell::before {
+      top: -120px;
+      left: -120px;
+    }
+    .shell::after {
+      bottom: -130px;
+      right: -110px;
     }
 
     .invite {
@@ -53,6 +83,35 @@
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
       max-height: calc(100vh - 80px);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* engraved floral bands */
+    .invite::before,
+    .invite::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 70px;
+      pointer-events: none;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 110% 100%;
+      opacity: 0.7;
+      z-index: 2;
+    }
+
+    .invite::before {
+      top: -4px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='120' viewBox='0 0 900 120'%3E%3Cg fill='none' stroke='%23d1b38f' stroke-width='1.4'%3E%3Cpath d='M30 95c40-40 110-70 190-70 120 0 180 60 270 60 80 0 150-40 210-70 70-36 110-40 170-32'/%3E%3Cpath d='M120 90c12-20 26-32 40-34 16-2 28 6 35 18'/%3E%3Cpath d='M360 76c8-16 22-27 36-28 16-1 26 9 32 20'/%3E%3Cpath d='M640 86c9-18 22-28 34-29 14-1 24 7 30 17'/%3E%3Ccircle cx='150' cy='64' r='6'/%3E%3Ccircle cx='170' cy='58' r='4.5'/%3E%3Ccircle cx='190' cy='66' r='4'/%3E%3Ccircle cx='390' cy='60' r='5'/%3E%3Ccircle cx='410' cy='54' r='3.8'/%3E%3Ccircle cx='428' cy='62' r='3.8'/%3E%3Ccircle cx='660' cy='70' r='5.5'/%3E%3Ccircle cx='682' cy='62' r='4.2'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .invite::after {
+      bottom: -6px;
+      transform: scaleY(-1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='120' viewBox='0 0 900 120'%3E%3Cg fill='none' stroke='%23d1b38f' stroke-width='1.4'%3E%3Cpath d='M40 90c50-28 120-44 190-38 80 8 150 46 230 48 70 2 140-24 210-46 70-22 120-30 180-24'/%3E%3Cpath d='M120 84c12-20 24-29 36-31 14-2 24 4 30 14'/%3E%3Cpath d='M360 78c9-18 22-28 34-29 15-1 25 8 31 18'/%3E%3Cpath d='M640 86c10-16 22-25 34-26 14-1 24 6 30 14'/%3E%3Ccircle cx='142' cy='64' r='5.5'/%3E%3Ccircle cx='162' cy='58' r='4'/%3E%3Ccircle cx='182' cy='66' r='4'/%3E%3Ccircle cx='384' cy='60' r='4.8'/%3E%3Ccircle cx='404' cy='54' r='3.6'/%3E%3Ccircle cx='422' cy='62' r='3.6'/%3E%3Ccircle cx='654' cy='70' r='5'/%3E%3Ccircle cx='676' cy='62' r='4'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     @media (max-width: 768px) {
@@ -75,6 +134,7 @@
       position: relative;
       overflow-y: auto;
       scroll-behavior: smooth;
+      z-index: 3;
     }
 
     .left::-webkit-scrollbar {
@@ -92,10 +152,10 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at top left, rgba(184, 154, 103, 0.15), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(184, 154, 103, 0.12), transparent 55%);
+      background: radial-gradient(circle at top left, rgba(184, 154, 103, 0.12), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(184, 154, 103, 0.08), transparent 55%);
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
     }
 
     .header-chip {
@@ -281,9 +341,10 @@
     .calendar-card {
       border-radius: 18px;
       border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       padding: 16px 16px 14px 16px;
       max-width: 320px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
     }
 
     .calendar-header {
@@ -334,9 +395,9 @@
     }
 
     .cal-date.highlight {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--flower-pink), var(--accent));
       color: #fff;
-      box-shadow: 0 10px 18px rgba(184, 154, 103, 0.35);
+      box-shadow: 0 10px 18px rgba(184, 154, 103, 0.4);
     }
 
     .calendar-note {
@@ -482,6 +543,7 @@
       font-family: "Georgia", serif;
       font-size: 20px;
       margin-bottom: 20px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 55%);
     }
 
     .side-heading {
@@ -554,6 +616,53 @@
         font-size: 26px;
       }
     }
+	.photo-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  margin: 12px 0 30px 0;
+}
+
+.photo-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.floral-top {
+  width: 100%;
+  height: 140px;
+  background-image: url("flowers-top.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.75;
+  margin-bottom: 12px;
+}
+.floral-corner {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background-image: url("flowers-corner.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.floral-corner-left {
+  top: 0;
+  left: 0;
+  transform: translate(-40px, -40px);
+}
+
+.floral-corner-right {
+  top: 0;
+  right: 0;
+  transform: translate(40px, -40px) scaleX(-1);
+}
+
   </style>
 </head>
 <body>
@@ -564,6 +673,10 @@
           <div class="dot"></div>
           <span>Wedding Invitation · Toy dəvətnaməsi</span>
         </div>
+	
+	<div class="floral-top"></div>
+<div class="floral-corner floral-corner-left"></div>
+<div class="floral-corner floral-corner-right"></div>
 
         <div class="names">ƏKBƏR &amp; PƏRVİN</div>
 
@@ -610,7 +723,11 @@
                 With love, <span>Əkbər &amp; Pərvin</span>
               </div>
             </section>
-
+	    <section class="section-block">
+  		<div class="photo-card">
+    			<img src="WhatsApp Image 2025-11-24 at 00.55.00.jpeg" alt="Couple Photo">
+  		</div>
+	    </section>
             <!-- Section 2: calendar -->
             <section class="section-block">
               <div class="and-line">SAVE THE DATE</div>
